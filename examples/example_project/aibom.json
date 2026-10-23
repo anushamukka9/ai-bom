@@ -1,0 +1,4 @@
+{
+  "models": [{"name": "gpt-4o", "version": "2024-08-06"}],
+  "tools": [{"name": "ticket-lookup", "version": "2.1.0"}]
+}
