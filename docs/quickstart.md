@@ -46,6 +46,21 @@ The example project is a tiny fake support agent. Its README lists
 exactly what a scan should find, and the test suite holds the
 scanner to that list.
 
+## Sign it, if anyone downstream trusts it
+
+A digest catches edits only while the digest itself is somewhere
+safe. If a manifest travels to another team or another pipeline,
+sign it at build time and verify the signature at deploy time:
+
+```bash
+ai-bom keygen --private ai-bom-private.key --public ai-bom-public.key
+ai-bom scan ./my-agent-app --output ai-bom-manifest.json --sign-key ai-bom-private.key
+ai-bom verify ai-bom-manifest.json ./my-agent-app --require-signature --public-key ai-bom-public.key
+```
+
+Keep the private key with your build secrets. The public key is
+safe to commit. The full guide is [signing.md](signing.md).
+
 ## What to do with a manifest
 
 - Commit it. A manifest in version control turns "what changed in
@@ -62,5 +77,7 @@ scanner to that list.
   the ones it deliberately ignores.
 - [manifest-format.md](manifest-format.md): the schema and how the
   digests are computed.
-- [cli.md](cli.md): the four commands and their exit codes.
+- [cli.md](cli.md): the commands and their exit codes.
+- [signing.md](signing.md): Ed25519 signing, key handling, and the
+  deploy-time check that fails closed.
 - [limitations.md](limitations.md): what this does not do. Read it.

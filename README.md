@@ -2,8 +2,9 @@
 
 An AI Bill of Materials for agent apps. One command inventories your
 models, tools, MCP servers, datasets, and prompts into a manifest
-with a tamper-evident digest. Know what your agent is made of before
-it runs.
+with a tamper-evident digest, and v0.2.0 signs it with Ed25519 so a
+rewritten manifest cannot pass as the original. Know what your agent
+is made of before it runs.
 
 ## Quickstart
 
@@ -96,6 +97,30 @@ Exit codes: 0 means fine, 1 means verify found a problem or diff
 found differences, 2 means the inputs could not be read. Details in
 [docs/cli.md](docs/cli.md).
 
+## Signing
+
+A digest alone proves a manifest matches itself. Anyone who can
+rewrite the manifest can recompute its digests. A signature proves
+the manifest came from whoever holds the private key:
+
+```bash
+ai-bom keygen --private ai-bom-private.key --public ai-bom-public.key
+ai-bom scan ./my-agent-app --output ai-bom-manifest.json --sign-key ai-bom-private.key
+ai-bom verify ai-bom-manifest.json ./my-agent-app --require-signature --public-key ai-bom-public.key
+```
+
+Sign at build time, verify at deploy time. `--require-signature`
+fails closed on an unsigned manifest, and `--public-key` pins the
+signer, so a manifest quietly re-signed with a different key fails
+too. The private key never leaves the build side; the public key is
+safe to commit next to the manifest. A ready to copy GitHub Actions
+check lives in [examples/ci-verify-signed.yml](examples/ci-verify-signed.yml),
+a runnable walkthrough in [examples/signing_demo.py](examples/signing_demo.py),
+and the full story, including what a signature does not prove, in
+[docs/signing.md](docs/signing.md). The Ed25519 implementation is
+pure Python and stdlib-only, cross checked byte for byte against an
+independent implementation in the tests.
+
 ## Benchmarks
 
 Measured on this machine (see [benchmarks/results.md](benchmarks/results.md)
@@ -104,13 +129,17 @@ across all five categories.
 
 | Benchmark | Result |
 |---|---|
-| Manifest build (fixture project, 13 components) | 1.48 ms average |
-| Scan throughput | 677 scans/sec |
-| Verify (manifest plus file hashes) | 2,947 verifies/sec |
+| Manifest build (fixture project, 13 components) | 1.43 ms average |
+| Scan throughput | 702 scans/sec |
+| Verify (manifest plus file hashes) | 2,977 verifies/sec |
+| Sign a manifest digest (Ed25519) | 6.67 ms average, 150 signs/sec |
+| Verify a signature (Ed25519) | 9.95 ms average, 101 verifies/sec |
 
 Scanning is file walking plus hashing. A real project with large
 datasets will be bound by hashing those files, which is the honest
-cost of knowing they did not change.
+cost of knowing they did not change. Signing is pure Python Ed25519
+over one digest, so it costs a few milliseconds once per manifest,
+not per file.
 
 ## Honest limitations
 
@@ -125,11 +154,11 @@ cost of knowing they did not change.
   mapped through a table of common provider and framework packages.
   A package outside the table is not guessed at. Declare it in
   `aibom.json` instead.
-- **Unsigned in v1.** The manifest digest detects edits only if you
-  keep the digest somewhere the manifest writer cannot reach, the
-  same caveat as any hash. Ed25519 signing and verification are on
-  the roadmap for the next release; v1 ships the SHA-256 digest
-  only, and says so.
+- **Signatures prove a key, not a person.** Signing (v0.2.0) closes
+  the re-signing gap for digests, but only when the deploy side pins
+  the public key it trusts. A signature from an unpinned key proves
+  someone signed it, not that the right someone did. Key handling
+  is yours, and [docs/signing.md](docs/signing.md) says so plainly.
 - **Dataset contents are never inspected.** The manifest records
   name, path, size, and hash. It cannot tell you a dataset is
   poisoned, licensed wrong, or full of PII.

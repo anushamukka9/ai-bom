@@ -11,9 +11,11 @@ Two layers, both cheap:
 
 A manifest that passes layer 1 but was never pinned anywhere proves
 only that it is self-consistent. Anyone who can rewrite the manifest
-can recompute its digests. Keep the digest somewhere the manifest
-writer cannot reach if you need the stronger claim. Ed25519 signing
-is on the roadmap and will close that gap; v1 ships hashes only.
+can recompute its digests. Ed25519 signing (layer 3, below) closes
+that gap: a signature, when present, is always checked here, and
+``require_signature=True`` makes an unsigned manifest fail closed.
+Passing ``public_key`` pins the signer, so a manifest re-signed with
+a different key does not pass either.
 """
 
 from __future__ import annotations
@@ -33,9 +35,20 @@ class VerifyResult:
     checked_files: int = 0
 
 
-def verify_manifest(manifest: Manifest, root: Path | str | None = None) -> VerifyResult:
+def verify_manifest(
+    manifest: Manifest,
+    root: Path | str | None = None,
+    require_signature: bool = False,
+    public_key: bytes | None = None,
+) -> VerifyResult:
     problems: list[str] = []
     checked_files = 0
+
+    from ai_bom.signing import signature_problems
+
+    if require_signature and manifest.signature is None:
+        problems.append("manifest is not signed, and a signature is required")
+    problems.extend(signature_problems(manifest, expected_public_key=public_key))
 
     if not manifest.digest:
         problems.append("manifest has no digest")

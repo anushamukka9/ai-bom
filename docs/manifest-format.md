@@ -9,7 +9,7 @@ lists.
   "schema_version": "1.0",
   "project": "example_project",
   "generated_at": "2026-10-22T23:47:00Z",
-  "generator": "ai-bom 0.1.0",
+  "generator": "ai-bom 0.2.0",
   "digest": "9f2c...",
   "components": [
     {
@@ -36,6 +36,8 @@ Header:
   digest rules below.
 - `generator`: the tool and version that produced the manifest.
 - `digest`: the top-level SHA-256, described below.
+- `signature`: optional Ed25519 signature block, described under
+  Signing below. Absent when the manifest is unsigned.
 
 Component:
 
@@ -71,9 +73,24 @@ comparison useful. The trade-off is stated plainly in
 [limitations.md](limitations.md): the timestamp itself is not
 tamper-protected in v1.
 
-## Signing: roadmap, not v1
+## Signing
 
-v1 integrity is hash-only. Ed25519 signing of the manifest digest,
-with a `sign` command and signature checking inside `verify`, is the
-headline item for the next release. Nothing in v1 produces or checks
-signatures, and the docs do not pretend otherwise.
+Since v0.2.0 a manifest may carry one more top-level field:
+
+```json
+"signature": {
+  "algorithm": "Ed25519",
+  "public_key": "base64 of the 32 byte public key",
+  "signature": "base64 of the 64 byte signature",
+  "signed_digest": "the manifest digest at signing time"
+}
+```
+
+The field is absent on unsigned manifests, so old manifests read
+exactly as before. The signature is computed over the text
+`ai-bom:manifest:1:` followed by the manifest digest, using
+Ed25519 as specified in RFC 8032. Like `generated_at`, the
+signature block sits outside the digest payload, so signing never
+changes the digest it covers. Verification of the signature lives
+inside `verify`, fails closed on any malformed or mismatched block,
+and is described in full in [signing.md](signing.md).

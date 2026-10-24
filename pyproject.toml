@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ai-bom"
-version = "0.1.0"
-description = "AI Bill of Materials for agent apps: one command inventories your models, tools, MCP servers, datasets, and prompts into a manifest with a tamper-evident digest."
+version = "0.2.0"
+description = "AI Bill of Materials for agent apps: one command inventories your models, tools, MCP servers, datasets, and prompts into a manifest with a tamper-evident digest and an optional Ed25519 signature."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"

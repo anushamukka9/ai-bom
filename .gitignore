@@ -8,3 +8,6 @@ build/
 .pytest_cache/
 .ruff_cache/
 .bench-work/
+# Signing keys: the public key is fine to share, the private key is not.
+ai-bom-private.key
+*-private.key

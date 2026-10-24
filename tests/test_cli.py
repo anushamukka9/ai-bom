@@ -140,7 +140,7 @@ def test_version_flag(capsys):
     with pytest.raises(SystemExit) as excinfo:
         main(["--version"])
     assert excinfo.value.code == 0
-    assert "0.1.0" in capsys.readouterr().out
+    assert "0.2.0" in capsys.readouterr().out
 
 
 def test_scan_example_project_via_cli(capsys):
