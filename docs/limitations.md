@@ -19,18 +19,24 @@ hard way.
   the name, nothing here notices. Pin versions where the provider
   lets you, and treat the manifest as a record of what you asked
   for, not proof of what ran.
-- **Unsigned in v1.** The SHA-256 digests detect edits when the
-  digest you trust lives somewhere the manifest writer cannot
-  reach. Anyone who can rewrite the manifest file can also recompute
-  its digests and produce a self-consistent fake; verify without a
-  pinned digest proves consistency, not provenance. Ed25519 signing
-  and verification are on the roadmap for the next release. v1 does
-  not produce or check signatures.
+- **Provenance needs a pinned key.** The SHA-256 digests alone
+  detect edits only when the digest you trust lives somewhere the
+  manifest writer cannot reach; anyone who can rewrite the manifest
+  can recompute its digests and produce a self-consistent fake.
+  Signing (since v0.2.0) fixes the re-signing problem, but only for
+  a verifier that requires a signature and pins the public key it
+  trusts (`verify --require-signature --public-key ...`). Verify
+  without those flags still proves consistency, not provenance,
+  and a signature from an unpinned key proves someone signed the
+  manifest, not that the right someone did. The signature also
+  proves the key holder signed this digest; it says nothing about
+  whether the scan itself was complete or honest.
 - **The timestamp is not digest-protected.** `generated_at` and
   `generator` sit outside the digest payload so rescans of an
   unchanged project keep the same digest. The cost: those two fields
-  can be edited without tripping verify. The component list, which
-  is the part that matters, cannot.
+  can be edited without tripping verify, and a signature does not
+  cover them either, since it signs the digest. The component list,
+  which is the part that matters, cannot be edited either way.
 - **MCP verification is per server entry.** Each server's hash
   covers its own config entry. Adding a brand new server to a config
   does not fail verify for the existing ones; it shows up in the

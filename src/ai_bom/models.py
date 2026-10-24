@@ -14,6 +14,11 @@ the file but deliberately left out of the digest payload, so a fresh
 timestamp never invalidates a manifest whose contents did not change.
 Editing any component field, or the digest itself, breaks the digest
 check in ``verify``.
+
+An optional ``signature`` block (see ``ai_bom.signing``) is metadata
+in the same way: it is stored in the file, left out of the digest
+payload, and it signs the digest, so adding one never changes the
+digest it covers.
 """
 
 from __future__ import annotations
@@ -120,6 +125,7 @@ class Manifest:
     generated_at: str = ""
     generator: str = ""
     digest: str = ""
+    signature: dict | None = None
 
     def sorted_components(self) -> list[Component]:
         return sorted(self.components, key=_component_sort_key)
@@ -145,7 +151,7 @@ class Manifest:
         return self.digest
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "schema_version": self.schema_version,
             "project": self.project,
             "generated_at": self.generated_at,
@@ -153,6 +159,9 @@ class Manifest:
             "digest": self.digest,
             "components": [comp.to_dict() for comp in self.sorted_components()],
         }
+        if self.signature is not None:
+            data["signature"] = self.signature
+        return data
 
     def to_json(self, indent: int | None = 2) -> str:
         return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False) + "\n"
@@ -163,6 +172,7 @@ class Manifest:
         if not isinstance(raw_components, list):
             raise ValueError("manifest components must be a list")
         components = [Component.from_dict(item) for item in raw_components]
+        raw_signature = data.get("signature")
         return cls(
             project=str(data.get("project", "")),
             components=components,
@@ -170,6 +180,7 @@ class Manifest:
             generated_at=str(data.get("generated_at", "")),
             generator=str(data.get("generator", "")),
             digest=str(data.get("digest", "")),
+            signature=raw_signature if isinstance(raw_signature, dict) else None,
         )
 
     @classmethod

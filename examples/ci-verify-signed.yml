@@ -1,0 +1,34 @@
+# Example: verify a signed ai-bom manifest in GitHub Actions.
+#
+# Copy this into .github/workflows/ in the repo that consumes the
+# agent app, next to two committed files:
+#
+#   ai-bom-manifest.json   the signed manifest, produced at build time
+#   ai-bom-public.key      the public key from `ai-bom keygen`
+#
+# The private key never appears here. It lives with the build: a CI
+# secret in the pipeline that runs `ai-bom scan --sign-key`, or a
+# secrets manager. This job only checks, and it fails closed: an
+# unsigned manifest, a tampered manifest, or a manifest signed by
+# any other key all fail the build.
+name: Verify AI-BOM
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify-ai-bom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install ai-bom
+        run: pip install ai-bom
+      - name: Verify the signed manifest against the tree
+        run: >-
+          ai-bom verify ai-bom-manifest.json .
+          --require-signature
+          --public-key ai-bom-public.key
