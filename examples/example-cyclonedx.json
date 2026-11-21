@@ -1,0 +1,386 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:dd552136-8e53-581f-98ba-933070d25590",
+  "version": 1,
+  "metadata": {
+    "tools": [
+      {
+        "vendor": "Anusha Mukka",
+        "name": "ai-bom",
+        "version": "0.3.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "ai-bom:project",
+      "name": "example_project"
+    },
+    "properties": [
+      {
+        "name": "ai-bom:digest",
+        "value": "c81c8bd0192574ef75570f1dddc3a03cd942c027ded5e4589a4be7d38da17fbb"
+      },
+      {
+        "name": "ai-bom:schema_version",
+        "value": "1.0"
+      },
+      {
+        "name": "ai-bom:signed",
+        "value": "false"
+      }
+    ],
+    "timestamp": "2026-11-21T23:52:10Z"
+  },
+  "components": [
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "ai-bom:models:anthropic:0",
+      "name": "anthropic",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "models"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "requirements.txt"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "c94ca5193d05635973adf6b7cb43f617dbcc0fd7319f8decfcffdf0604774432"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "ai-bom:models:cohere:1",
+      "name": "cohere",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "models"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "src/app.py"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "e805eb1881d5a5028d59e0c550b8bc3dee69ba790630f54f9d0ddb66859c6774"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "ai-bom:models:gpt-4o:2",
+      "name": "gpt-4o",
+      "version": "2024-08-06",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "models"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "aibom.json"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "bb166ea2bfa16f08d722620ac28aab48498bfe76bcf952d1a5a6a95af18b49ee"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "ai-bom:models:openai:3",
+      "name": "openai",
+      "version": "1.40.0",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "models"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "requirements.txt"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "6e33203dbbad9c3c78d0d1c82c8495998859dba319e049792f621e82ccafca49"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ai-bom:tools:langchain:4",
+      "name": "langchain",
+      "version": "0.2.14",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "tools"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "requirements.txt"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "7182d49c2e61294502f4333f8e6bb4f7e9e25ba373c445c28cae9df518b445c6"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "ai-bom:tools:ticket-lookup:5",
+      "name": "ticket-lookup",
+      "version": "2.1.0",
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "tools"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "aibom.json"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "0f1c0ca90c85fc6e706bef244c4fcf7a22615fb11e8b99d908a9d925b5fc57bd"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "ai-bom:mcp_servers:filesystem:6",
+      "name": "filesystem",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1c5f706ede69a5445acb74fa237bb02c19218618f00b8b605a013f0607eb0d52"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "mcp_servers"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "mcp.json"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "30e8375ccf1a0240f4b11a271140c3c717450753d45e2472da41b4f857f02369"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "mcp.json"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "239"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "ai-bom:mcp_servers:ticket-db:7",
+      "name": "ticket-db",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a8a4ae0be64e4fc518474b58a069d13ce25d1ae97cba43a2213f25bdc6680301"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "mcp_servers"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "mcp.json"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "4807f56d11c7341430c836a1d6207d3b015ac4dff134835107a5b3fccc69f122"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "mcp.json"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "239"
+        }
+      ]
+    },
+    {
+      "type": "data",
+      "bom-ref": "ai-bom:datasets:faq.jsonl:8",
+      "name": "faq.jsonl",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bce20b0745fe800bdf77920c78b84ef7fde9df0aa769e4fca7790c63ad16a795"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "datasets"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "data/faq.jsonl"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "95a39c6484d9820aafaab7f45608031155625a33f69efe5901b955634389ac61"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "data/faq.jsonl"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "124"
+        }
+      ]
+    },
+    {
+      "type": "data",
+      "bom-ref": "ai-bom:datasets:tickets.csv:9",
+      "name": "tickets.csv",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "69e7888f55a1303e664e7e2c90a3ae2928ed903401779bce4b4738de95b9b17e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "datasets"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "data/tickets.csv"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "bdc09f0904a382d28d7ab627061b83036d8db214bb0eaa96d3f7d9df14aee731"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "data/tickets.csv"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "61"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ai-bom:prompts:email.j2:10",
+      "name": "email.j2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ac1bdb5acf68915bdaf427003903eeed5df77179275a8097ab41da19c0d3166c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "prompts"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "templates/email.j2"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "724c2d1bd8100af3c4195a01d4f98a2a1ed1b0787a749f5cb199f657b314aee4"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "templates/email.j2"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "61"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ai-bom:prompts:summary.jinja:11",
+      "name": "summary.jinja",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "19cd3be1c038db012a506d892ac3f18579cffce9f17b7fd1d26bc1dba9737451"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "prompts"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "prompts/summary.jinja"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "d2f3133033195bae4e1f2e23daf8860f1884ae4d5753056ee212603507a287e2"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "prompts/summary.jinja"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "59"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "ai-bom:prompts:system.prompt:12",
+      "name": "system.prompt",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fd76fa54d47fb470c6e18efd81c7ecf35dca3eff1565a85253afb1a01edbecd3"
+        }
+      ],
+      "properties": [
+        {
+          "name": "ai-bom:category",
+          "value": "prompts"
+        },
+        {
+          "name": "ai-bom:source",
+          "value": "prompts/system.prompt"
+        },
+        {
+          "name": "ai-bom:digest",
+          "value": "cced579d0bfdd27cd9403d65f7005656746bde1c70a9516771806bd713de4dbf"
+        },
+        {
+          "name": "ai-bom:path",
+          "value": "prompts/system.prompt"
+        },
+        {
+          "name": "ai-bom:size_bytes",
+          "value": "153"
+        }
+      ]
+    }
+  ]
+}
