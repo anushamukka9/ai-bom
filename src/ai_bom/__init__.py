@@ -16,6 +16,9 @@ Quickstart:
     assert result.valid
 """
 
+__version__ = "0.3.0"
+
+from ai_bom.cyclonedx import manifest_to_cyclonedx_json, to_cyclonedx
 from ai_bom.diff import ComponentChange, Diff, diff_manifests
 from ai_bom.discovery import KNOWN_PACKAGES, scan_project, sha256_file
 from ai_bom.models import CATEGORIES, SCHEMA_VERSION, Component, Manifest
@@ -29,8 +32,6 @@ from ai_bom.signing import (
     verify,
 )
 from ai_bom.verify import VerifyResult, verify_manifest
-
-__version__ = "0.2.0"
 
 __all__ = [
     "CATEGORIES",
@@ -47,9 +48,11 @@ __all__ = [
     "generate_keypair",
     "load_private_key",
     "load_public_key",
+    "manifest_to_cyclonedx_json",
     "scan_project",
     "sha256_file",
     "sign_manifest",
+    "to_cyclonedx",
     "verify",
     "verify_manifest",
 ]

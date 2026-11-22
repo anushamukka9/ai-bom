@@ -7,6 +7,7 @@ Commands:
 - ``ai-bom show <manifest>``
 - ``ai-bom diff <old> <new>``
 - ``ai-bom keygen [--private FILE] [--public FILE]``
+- ``ai-bom export <manifest> [--format cyclonedx] [--output FILE]``
 - ``ai-bom sign <manifest> --key FILE [--output FILE]``
 
 Exit codes, everywhere:
@@ -27,6 +28,7 @@ import sys
 from pathlib import Path
 
 from ai_bom import __version__
+from ai_bom.cyclonedx import manifest_to_cyclonedx_json
 from ai_bom.diff import diff_manifests
 from ai_bom.discovery import scan_project
 from ai_bom.models import CATEGORIES, Manifest
@@ -133,6 +135,8 @@ def cmd_scan(args: argparse.Namespace) -> int:
         sign_manifest(manifest, private)
     if args.format == "markdown":
         output = render_markdown(manifest)
+    elif args.format == "cyclonedx":
+        output = manifest_to_cyclonedx_json(manifest)
     else:
         output = manifest.to_json()
     if args.output:
@@ -230,6 +234,26 @@ def cmd_sign(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def cmd_export(args: argparse.Namespace) -> int:
+    try:
+        manifest = _load_manifest(args.manifest)
+    except (FileNotFoundError, ValueError, OSError) as exc:
+        print(f"error: cannot load manifest: {exc}", file=sys.stderr)
+        return EXIT_USAGE
+    output = manifest_to_cyclonedx_json(manifest)
+    if args.output:
+        try:
+            Path(args.output).write_text(output, encoding="utf-8")
+        except OSError as exc:
+            print(f"error: cannot write export: {exc}", file=sys.stderr)
+            return EXIT_USAGE
+        count = len(manifest.components)
+        print(f"wrote {args.output}: CycloneDX 1.5, {count} components")
+    else:
+        print(output, end="")
+    return EXIT_OK
+
+
 def cmd_diff(args: argparse.Namespace) -> int:
     try:
         old = _load_manifest(args.old)
@@ -264,7 +288,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_scan = sub.add_parser("scan", help="scan a project and build its manifest")
     p_scan.add_argument("path", help="project directory to scan")
     p_scan.add_argument("--output", "-o", default=None, help="write the manifest here")
-    p_scan.add_argument("--format", choices=["json", "markdown"], default="json")
+    p_scan.add_argument("--format", choices=["json", "markdown", "cyclonedx"], default="json")
     p_scan.add_argument(
         "--sign-key", default=None, help="private key file: sign the manifest as it is built"
     )
@@ -302,6 +326,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_show = sub.add_parser("show", help="print a readable summary of a manifest")
     p_show.add_argument("manifest", help="manifest JSON file")
     p_show.set_defaults(func=cmd_show)
+
+    p_export = sub.add_parser("export", help="export a manifest in another format (CycloneDX)")
+    p_export.add_argument("manifest", help="manifest JSON file")
+    p_export.add_argument(
+        "--format", choices=["cyclonedx"], default="cyclonedx", help="export format"
+    )
+    p_export.add_argument("--output", "-o", default=None, help="write the export here")
+    p_export.set_defaults(func=cmd_export)
 
     p_diff = sub.add_parser("diff", help="compare two manifests")
     p_diff.add_argument("old", help="older manifest JSON file")

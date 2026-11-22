@@ -3,8 +3,9 @@
 An AI Bill of Materials for agent apps. One command inventories your
 models, tools, MCP servers, datasets, and prompts into a manifest
 with a tamper-evident digest, and v0.2.0 signs it with Ed25519 so a
-rewritten manifest cannot pass as the original. Know what your agent
-is made of before it runs.
+rewritten manifest cannot pass as the original. Since v0.3.0 it also
+exports CycloneDX, so existing SBOM tooling can read the list too.
+Know what your agent is made of before it runs.
 
 ## Quickstart
 
@@ -96,6 +97,25 @@ ai-bom show manifest.json                    # a readable summary
 Exit codes: 0 means fine, 1 means verify found a problem or diff
 found differences, 2 means the inputs could not be read. Details in
 [docs/cli.md](docs/cli.md).
+
+## CycloneDX export
+
+Most SBOM tooling already speaks CycloneDX, so v0.3.0 translates:
+
+```bash
+ai-bom export manifest.json --output bom.cdx.json
+ai-bom scan ./my-agent-app --format cyclonedx --output bom.cdx.json
+```
+
+Models map to `machine-learning-model`, tools to `library`, MCP
+servers to `application`, datasets to `data`, and prompts to `file`.
+Every component keeps its ai-bom category, source, path, and digest
+as CycloneDX properties, and file hashes become CycloneDX hash
+entries. The full mapping and its limits are in
+[docs/cyclonedx.md](docs/cyclonedx.md), with a runnable example in
+[examples/cyclonedx_export.py](examples/cyclonedx_export.py) and a
+ready-made export of the example project in
+[examples/example-cyclonedx.json](examples/example-cyclonedx.json).
 
 ## Signing
 

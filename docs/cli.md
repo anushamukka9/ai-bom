@@ -12,6 +12,8 @@ ai-bom verify manifest.json                           # internal digest checks o
 ai-bom verify manifest.json ./my-agent-app            # digests plus every recorded file hash
 ai-bom diff old.json new.json                         # added, removed, changed
 ai-bom diff old.json new.json --format json           # the same, machine readable
+ai-bom export manifest.json --output bom.cdx.json     # CycloneDX 1.5 for SBOM tooling
+ai-bom scan ./app --format cyclonedx                  # scan and export in one step
 ai-bom keygen                                         # an Ed25519 keypair in the current directory
 ai-bom scan ./app -o manifest.json --sign-key ai-bom-private.key   # scan and sign in one step
 ai-bom sign manifest.json --key ai-bom-private.key    # sign a manifest you already have
@@ -36,6 +38,8 @@ Details that matter:
   `--force`, because quietly replacing a private key breaks every
   deploy check pinned to the old public key. `sign` writes in place
   unless `--output` says otherwise.
+- `export` writes CycloneDX 1.5 JSON, to `--output` or stdout.
+  The mapping is documented in [cyclonedx.md](cyclonedx.md).
 - `diff` matches components by category, name, and path. A version
   bump and a hash change both count as `changed`, and the printed
   line says which fields moved.
